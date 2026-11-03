@@ -1,0 +1,29 @@
+resources:
+  schemas:
+    raw:
+      catalog_name: ${var.catalog}
+      name: raw
+      comment: Camada raw - arquivos Parquet do volume, sem transformacao
+    
+    bronze:
+      catalog_name: ${var.catalog}
+      name: bronze
+      comment: Camada bronze - ingestao fiel, sem regra de negocio
+    
+    silver:
+      catalog_name: ${var.catalog}
+      name: silver
+      comment: Camada silver - limpeza, deduplicacao, enriquecimento e aplicacao de regras
+    
+    gold:
+      catalog_name: ${var.catalog}
+      name: gold
+      comment: Camada gold - agregacoes de negocio com descricoes
+  
+  volumes:
+    landing:
+      catalog_name: ${var.catalog}
+      schema_name: ${resources.schemas.raw.name}
+      name: landing
+      volume_type: MANAGED
+      comment: Volume para ingestao de arquivos Parquet das quatro bases

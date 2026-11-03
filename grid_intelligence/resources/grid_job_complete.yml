@@ -1,0 +1,35 @@
+resources:
+  jobs:
+    grid_intelligence_complete:
+      name: grid_intelligence_complete
+      
+      tasks:
+        # Task 1: Execução do pipeline DLT (bronze, silver e gold)
+        - task_key: pipeline_bronze_silver_gold
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.grid_intelligence_bronze.id}
+            full_refresh: false
+          timeout_seconds: 7200
+        
+        # Task 2: Criação da metric view (depende do pipeline)
+        - task_key: metric_view_continuidade
+          depends_on:
+            - task_key: pipeline_bronze_silver_gold
+          notebook_task:
+            notebook_path: ../src/notebooks/create_metric_view.py
+            source: WORKSPACE
+          timeout_seconds: 600
+      
+      # Job executa uma vez por dia às 6h da manhã
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: "America/Sao_Paulo"
+        pause_status: UNPAUSED
+      
+      email_notifications:
+        on_failure:
+          - claitonlc@gmail.com
+      
+      max_concurrent_runs: 1
+      timeout_seconds: 10800
+

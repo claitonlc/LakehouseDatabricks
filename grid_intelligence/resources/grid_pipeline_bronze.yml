@@ -1,0 +1,44 @@
+resources:
+  pipelines:
+    grid_intelligence_bronze:
+      name: grid_intelligence_bronze
+      catalog: ${var.catalog}
+      target: bronze
+      
+      libraries:
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/01_bronze.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/10_silver_cadastro.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/11_silver_interrupcoes.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/12_silver_consumo.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/13_silver_chamados.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/20_gold_continuidade.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/21_gold_prioridade_inspecao.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/22_gold_saude_cliente.sql
+        - file:
+            path: ../src/pipelines/grid_intelligence/transformations/23_gold_painel_operacional.sql
+      
+      channel: PREVIEW
+      photon: true
+      serverless: true
+      
+      continuous: false
+      
+      configuration:
+        catalogo: ${var.catalog}
+        schema_bronze: bronze
+        schema_silver: silver
+        schema_gold: gold
+        schema_raw: raw
+        volume_landing: /Volumes/${var.catalog}/raw/landing
+        limiar_interrupcao_minutos: "3"
+        duracao_minima_interrupcao_min: "3"
+        limiar_queda_uc_pct: "-20"
+        limiar_estabilidade_conjunto_pct: "5"

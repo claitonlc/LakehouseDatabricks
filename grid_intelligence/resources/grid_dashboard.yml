@@ -1,0 +1,10 @@
+resources:
+  dashboards:
+    grid_intelligence_dashboard:
+      display_name: "[${bundle.target}] Grid Intelligence - Operação e Perdas"
+      warehouse_id: ${var.warehouse_id}
+      parent_path: "/Workspace/Users/${workspace.current_user.userName}/dashboards"
+      file_path: ./grid_dashboard.json
+      embed_credentials: true
+      dataset_catalog: ${var.catalog}
+      dataset_schema: gold
